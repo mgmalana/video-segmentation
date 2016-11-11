@@ -1,7 +1,7 @@
 package main;
 
 import com.sun.image.codec.jpeg.ImageFormatException;
-import model.Image;
+import model.XImage;
 import videoSegmentationMethods.HistogramComparison;
 
 import java.io.File;
@@ -13,15 +13,15 @@ import java.util.ArrayList;
  */
 public class VideoSegmentation {
     //segment video
-    public Image[] videoSegment(File selectedDirectory){
+    public XImage[] videoSegment(File selectedDirectory){
         //traverse files of the selectedDirectory. if image. save the image
-        ArrayList<Image> images =  new ArrayList<>();
+        ArrayList<XImage> images =  new ArrayList<>();
         HistogramComparison hc = new HistogramComparison();
 
         //adds all the images to the array.
         for (File file : selectedDirectory.listFiles()) {
             try {
-                images.add(new Image(file));
+                images.add(new XImage(file));
             }catch (ImageFormatException e) {
                 System.err.println(file + " is not a JPEG file");
             } catch (IOException e) {
@@ -38,6 +38,6 @@ public class VideoSegmentation {
 
         System.out.println("Done segmenting");
 
-        return images.toArray(new Image[images.size()]);
+        return images.toArray(new XImage[images.size()]);
     }
 }
