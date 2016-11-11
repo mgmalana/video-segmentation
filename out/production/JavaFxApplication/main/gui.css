@@ -12,6 +12,6 @@
     -fx-stroke: transparent;
 }
 
-.axis{
+#xAxis{
     -fx-opacity: 0;
 }
