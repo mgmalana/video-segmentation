@@ -16,6 +16,7 @@ import java.io.IOException;
 public class Image {
     private int[][] RGBMatrix; //[x][y]
     private File file;
+    private int distance;
 
     public Image(File file) throws IOException, ImageFormatException {
         this.file = file;
@@ -69,6 +70,14 @@ public class Image {
 
     public File getFile() {
         return file;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
     }
 
     @Override

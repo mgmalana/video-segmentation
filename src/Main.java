@@ -1,3 +1,5 @@
+import main.VideoSegmentation;
+
 import javax.swing.*;
 import java.io.File;
 

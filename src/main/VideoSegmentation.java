@@ -1,3 +1,5 @@
+package main;
+
 import com.sun.image.codec.jpeg.ImageFormatException;
 import model.Image;
 import videoSegmentationMethods.HistogramComparison;
@@ -11,7 +13,7 @@ import java.util.ArrayList;
  */
 public class VideoSegmentation {
     //segment video
-    public void videoSegment(File selectedDirectory){
+    public Image[] videoSegment(File selectedDirectory){
         //traverse files of the selectedDirectory. if image. save the image
         ArrayList<Image> images =  new ArrayList<>();
         HistogramComparison hc = new HistogramComparison();
@@ -27,12 +29,15 @@ public class VideoSegmentation {
             }
         }
 
+        System.out.print("Done segmenting");
+
         for(int i = 0; i < images.size() - 1; i++){
+            int distance = hc.getDistance(images.get(i), images.get(i + 1));
+            images.get(i).setDistance(distance);
             System.out.println("Distance of " + images.get(i).getFile().getName() +
-                    " to " + images.get(i + 1).getFile().getName() + " is: " +
-                    hc.getDistance(images.get(i), images.get(i + 1)));
-
-
+                    " to " + images.get(i + 1).getFile().getName() + " is: " + distance);
         }
+
+        return images.toArray(new Image[images.size()]);
     }
 }
