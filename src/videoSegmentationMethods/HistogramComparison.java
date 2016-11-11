@@ -1,6 +1,6 @@
 package videoSegmentationMethods;
 
-import model.Image;
+import model.XImage;
 
 import java.util.Arrays;
 
@@ -11,7 +11,7 @@ public class HistogramComparison {
     public static final int NUM_COLORS = 64;
     private static final int NUM_GRID = 4; //4x4
 
-    public int getDistance(Image firstImage, Image nextImage){
+    public int getDistance(XImage firstImage, XImage nextImage){
         return getDistance(firstImage.getRGBMatrix(), nextImage.getRGBMatrix());
     }
 

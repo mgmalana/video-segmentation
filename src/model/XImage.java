@@ -13,11 +13,12 @@ import java.io.IOException;
 /**
  * Created by mgmalana on 30/10/2016.
  */
-public class Image {
+public class XImage {
     private int[][] RGBMatrix; //[x][y]
     private File file;
+    private int distance;
 
-    public Image(File file) throws IOException, ImageFormatException {
+    public XImage(File file) throws IOException, ImageFormatException {
         this.file = file;
 
         FileInputStream in = new FileInputStream(file);
@@ -71,12 +72,20 @@ public class Image {
         return file;
     }
 
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Image image = (Image) o;
+        XImage image = (XImage) o;
 
         return file.equals(image.file);
 
