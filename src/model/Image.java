@@ -41,7 +41,7 @@ public class Image {
     }
 
     //returns a combined value of rgb by getting the 2 most significant bit of each color
-    public int getCombinedRGBValue(int red, int green, int blue) {
+    private int getCombinedRGBValue(int red, int green, int blue) {
         int value = 0;
 
         //add red bits to the value

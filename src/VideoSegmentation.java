@@ -9,7 +9,6 @@ import java.util.ArrayList;
  * Created by mgmalana on 11/11/2016.
  */
 public class VideoSegmentation {
-
     //segment video
     public void videoSegment(File selectedDirectory){
         //traverse files of the selectedDirectory. if image. save the image
