@@ -1,22 +1,27 @@
+import model.Image;
+import com.sun.image.codec.jpeg.ImageFormatException;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by mgmalana on 10/11/2016.
  */
 public class Main {
     public static void main(String[] args) {
-        Main main = new Main();
-        File selectedFile = main.initFileChooser();
+        VideoSegmentation vs = new VideoSegmentation();
+        File selectedDirectory = initFileChooser();
 
-        if(selectedFile != null){
-            main.videoSegment(selectedFile);
+        if(selectedDirectory != null){
+            vs.videoSegment(selectedDirectory);
         }
 
     }
 
-    public File initFileChooser(){
+    public static File initFileChooser(){
         JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(new java.io.File("."));
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -28,9 +33,5 @@ public class Main {
             System.out.println("No Selection ");
         }
         return chooser.getSelectedFile();
-    }
-
-    public void videoSegment(File selectedDirectory){
-        
     }
 }
