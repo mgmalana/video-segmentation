@@ -29,14 +29,14 @@ public class VideoSegmentation {
             }
         }
 
-        System.out.print("Done segmenting");
-
         for(int i = 0; i < images.size() - 1; i++){
             int distance = hc.getDistance(images.get(i), images.get(i + 1));
             images.get(i).setDistance(distance);
             System.out.println("Distance of " + images.get(i).getFile().getName() +
                     " to " + images.get(i + 1).getFile().getName() + " is: " + distance);
         }
+
+        System.out.println("Done segmenting");
 
         return images.toArray(new Image[images.size()]);
     }
