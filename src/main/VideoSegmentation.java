@@ -3,6 +3,7 @@ package main;
 import com.sun.image.codec.jpeg.ImageFormatException;
 import model.XImage;
 import videoSegmentationMethods.HistogramComparison;
+import videoSegmentationMethods.TwinComparison;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,11 +13,19 @@ import java.util.ArrayList;
  * Created by mgmalana on 11/11/2016.
  */
 public class VideoSegmentation {
+
+    //TODO: set this pa. idk how to get this
+    private static int H_THRESHOLD = 10000;
+    private static int L_THRESHOLD = 5000;
+    private static int NUM_TOLERANCE = 3;
+
+
     //segment video
-    public XImage[] videoSegment(File selectedDirectory){
+    public XImage[][] videoSegment(File selectedDirectory){
         //traverse files of the selectedDirectory. if image. save the image
         ArrayList<XImage> images =  new ArrayList<>();
         HistogramComparison hc = new HistogramComparison();
+        TwinComparison tc = new TwinComparison();
 
         //adds all the images to the array.
         for (File file : selectedDirectory.listFiles()) {
@@ -38,6 +47,6 @@ public class VideoSegmentation {
 
         System.out.println("Done segmenting");
 
-        return images.toArray(new XImage[images.size()]);
+        return tc.getSegmentedImages(images.toArray(new XImage[images.size()]), H_THRESHOLD, L_THRESHOLD, NUM_TOLERANCE);
     }
 }

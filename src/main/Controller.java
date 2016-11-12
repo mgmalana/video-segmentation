@@ -32,7 +32,7 @@ public class Controller {
             directoryLabel.setText(selectedDirectory.getName());
             segmentButtonWrap.setTooltip(null);
             segmentButton.setDisable(false);
-//
+
         }
     }
 
@@ -51,36 +51,41 @@ public class Controller {
 
     public void segment(ActionEvent actionEvent) {
         VideoSegmentation vs = new VideoSegmentation();
-        XImage[] images = vs.videoSegment(selectedDirectory);
+        XImage[][] images = vs.videoSegment(selectedDirectory);
 
+        barChart.getData().clear();
         addImagesToBarChart(images);
     }
 
-    private void addImagesToBarChart(XImage[] images) {
-        XYChart.Series <Number, Number> series = new XYChart.Series();
-        ObservableList data= series.getData();
+    private void addImagesToBarChart(XImage[][] images) {
+        int indexArray = 0;
 
-        for (int i = 0; i < images.length; i++) {
-            data.add(new XYChart.Data(i + "", images[i].getDistance()));
+        for (XImage[] imageArray: images) {
+            XYChart.Series <Number, Number> series = new XYChart.Series();
+            ObservableList data= series.getData();
+
+            for (int i = 0; i < imageArray.length; i++) {
+                data.add(new XYChart.Data(i+indexArray + "", imageArray[i].getDistance()));
+            }
+
+            barChart.getData().add(series);
+
+
+            for(int i = 0; i < series.getData().size(); i++){
+                int finalX = i;
+                series.getData().get(i).getNode().setOnMouseMoved(new EventHandler<MouseEvent>() {
+
+                    Image image = new Image(imageArray[finalX].getFile().toURI().toString());
+
+                    @Override
+                    public void handle(MouseEvent event) {
+                        System.out.println("x: " + finalX);
+
+                        imageView.setImage(image);
+                    }
+                });
+            }
+            indexArray += imageArray.length;//TODO: check if tama
         }
-
-        barChart.getData().add(series);
-
-
-        for(int i = 0; i < series.getData().size(); i++){
-            int finalX = i;
-            series.getData().get(i).getNode().setOnMouseMoved(new EventHandler<MouseEvent>() {
-
-                Image image = new Image(images[finalX].getFile().toURI().toString());
-
-                @Override
-                public void handle(MouseEvent event) {
-                    System.out.println("x: " + finalX);
-
-                    imageView.setImage(image);
-                }
-            });
-        }
-
     }
 }

@@ -25,6 +25,7 @@ public class TwinComparison {
                         toleranceCount = 0;
                         cumulative = 0;
                         isPossibleTransition = false;
+                        cuts.add(i); //adds the next scene //TODO: idk if kelangan icut off yung transition
                     } else if(toleranceCount > tolerance){
                         toleranceCount = 0;
                         cumulative = 0;
