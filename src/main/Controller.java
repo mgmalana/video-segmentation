@@ -15,6 +15,7 @@ import javafx.stage.DirectoryChooser;
 import model.XImage;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class Controller {
     public Label directoryLabel;
@@ -55,11 +56,14 @@ public class Controller {
         VideoSegmentation vs = new VideoSegmentation();
         XImage[][] images = vs.videoSegment(selectedDirectory);
         XImage[] keyFrames = vs.getKeyFrames(images);
+        ArrayList <Integer> transitions = vs.getTransitions();
 
         this.keyframes = new Image[keyFrames.length];
 
         for (int i = 0; i < keyFrames.length ; i++) { //get images
-            this.keyframes[i] = new Image(keyFrames[i].getFile().toURI().toString());
+            if (!transitions.contains(i)){
+                this.keyframes[i] = new Image(keyFrames[i].getFile().toURI().toString());
+            }
         }
 
         barChart.getData().clear();

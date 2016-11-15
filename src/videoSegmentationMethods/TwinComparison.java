@@ -9,13 +9,18 @@ import java.util.LinkedList;
  * Created by mgmalana on 12/11/2016.
  */
 public class TwinComparison {
+    private ArrayList<Integer> transitions;
+
+    public TwinComparison(){
+        transitions = new ArrayList<>();
+    }
+
     public XImage[][] getSegmentedImages(XImage[] images, int hThreshold, int lThreshold, int tolerance){ //[x][y] x is segment, y is image index
         XImage[][] segmentedImages;
         LinkedList<Integer> cuts = new LinkedList<>();
         boolean isPossibleTransition = false;
         int cumulative = 0;
         int toleranceCount = 0;
-
         for (int i = 0; i < images.length; i++) {
             if(isPossibleTransition){
                 if (images[i].getDistance() > lThreshold){
@@ -25,15 +30,17 @@ public class TwinComparison {
                         toleranceCount = 0;
                         cumulative = 0;
                         isPossibleTransition = false;
-                        cuts.add(i); //adds the next scene //TODO: idk if kelangan icut off yung transition
-                    } else if(toleranceCount > tolerance){
+                        transitions.add(cuts.size() - 1); //adds the index of transition in cuts
+                        cuts.add(i); //adds the next scene
+                    } else if(toleranceCount >= tolerance){
                         toleranceCount = 0;
                         cumulative = 0;
                         isPossibleTransition = false;
                         cuts.removeLast(); //remove the last int added
                     } else {
+                        toleranceCount++;
                         //TODO: ask kate if kelangan iadd sya sa cumulative
-                        tolerance++;
+//                        cumulative+= images[i].getDistance();
                     }
                 }
             } else {
@@ -69,5 +76,9 @@ public class TwinComparison {
         }
 
         return segmentedImages;
+    }
+
+    public ArrayList<Integer> getTransitions() {
+        return transitions;
     }
 }
