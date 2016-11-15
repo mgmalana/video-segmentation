@@ -20,7 +20,7 @@ public class VideoSegmentation {
     private static int L_THRESHOLD = 2500;
     private static int NUM_TOLERANCE = 1;
 
-    TwinComparison tc;
+    private TwinComparison tc;
 
     public VideoSegmentation(){
         tc = new TwinComparison();
