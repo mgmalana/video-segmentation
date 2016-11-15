@@ -2,7 +2,6 @@ package main;
 
 import com.sun.image.codec.jpeg.ImageFormatException;
 import model.XImage;
-import videoSegmentationMethods.HistogramComparison;
 import videoSegmentationMethods.TwinComparison;
 
 import java.io.File;
@@ -24,7 +23,6 @@ public class VideoSegmentation {
     public XImage[][] videoSegment(File selectedDirectory){
         //traverse files of the selectedDirectory. if image. save the image
         ArrayList<XImage> images =  new ArrayList<>();
-        HistogramComparison hc = new HistogramComparison();
         TwinComparison tc = new TwinComparison();
 
         //adds all the images to the array.
@@ -39,7 +37,7 @@ public class VideoSegmentation {
         }
 
         for(int i = 0; i < images.size() - 1; i++){
-            int distance = hc.getDistance(images.get(i), images.get(i + 1));
+            int distance = tc.getDistance(images.get(i), images.get(i + 1));
             images.get(i).setDistance(distance);
             System.out.println("Distance of " + images.get(i).getFile().getName() +
                     " to " + images.get(i + 1).getFile().getName() + " is: " + distance);
