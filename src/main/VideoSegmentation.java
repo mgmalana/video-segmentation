@@ -20,7 +20,6 @@ public class VideoSegmentation {
     private static int L_THRESHOLD = 5000;
     private static int NUM_TOLERANCE = 3;
 
-
     //segment video
     public XImage[][] videoSegment(File selectedDirectory){
         //traverse files of the selectedDirectory. if image. save the image
@@ -47,7 +46,6 @@ public class VideoSegmentation {
         }
 
         System.out.println("Done segmenting");
-
         return tc.getSegmentedImages(images.toArray(new XImage[images.size()]), H_THRESHOLD, L_THRESHOLD, NUM_TOLERANCE);
     }
 

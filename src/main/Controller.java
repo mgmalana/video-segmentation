@@ -22,8 +22,10 @@ public class Controller {
     public Button segmentButton;
     public BarChart<Number, Number> barChart;
     public ImageView imageView;
+    public ImageView keyImageView;
 
     private File selectedDirectory;
+    private Image[] keyframes;
 
     public void openFileChooser(ActionEvent actionEvent) {
         selectedDirectory = initFileChooser();
@@ -52,6 +54,13 @@ public class Controller {
     public void segment(ActionEvent actionEvent) {
         VideoSegmentation vs = new VideoSegmentation();
         XImage[][] images = vs.videoSegment(selectedDirectory);
+        XImage[] keyFrames = vs.getKeyFrames(images);
+
+        this.keyframes = new Image[keyFrames.length];
+
+        for (int i = 0; i < keyFrames.length ; i++) { //get images
+            this.keyframes[i] = new Image(keyFrames[i].getFile().toURI().toString());
+        }
 
         barChart.getData().clear();
         addImagesToBarChart(images);
@@ -59,6 +68,7 @@ public class Controller {
 
     private void addImagesToBarChart(XImage[][] images) {
         int indexArray = 0;
+        int seriesIndex = 0;
 
         for (XImage[] imageArray: images) {
             XYChart.Series <Number, Number> series = new XYChart.Series();
@@ -69,23 +79,24 @@ public class Controller {
             }
 
             barChart.getData().add(series);
-
-
-            for(int i = 0; i < series.getData().size(); i++){
+            for(int i = 0; i < series.getData().size(); i++){ //for indiv image
                 int finalX = i;
-                series.getData().get(i).getNode().setOnMouseMoved(new EventHandler<MouseEvent>() {
+                int finalSeriesIndex = seriesIndex;
+                series.getData().get(i).getNode().setOnMouseEntered(new EventHandler<MouseEvent>() {
 
                     Image image = new Image(imageArray[finalX].getFile().toURI().toString());
 
                     @Override
                     public void handle(MouseEvent event) {
-                        System.out.println("x: " + finalX);
-
+                        System.out.println("x: " + finalX + " series " + finalSeriesIndex);
+                        keyImageView.setImage(keyframes[finalSeriesIndex]);
                         imageView.setImage(image);
+
                     }
                 });
             }
             indexArray += imageArray.length;//TODO: check if tama
+            seriesIndex++;
         }
     }
 }

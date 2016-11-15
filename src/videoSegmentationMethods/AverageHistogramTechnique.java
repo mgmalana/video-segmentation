@@ -28,7 +28,7 @@ public class AverageHistogramTechnique {
     private XImage getKeyFrame(XImage[] xImages, HistogramComparison hc) {
         int[] sumHistogram = new int[HistogramComparison.NUM_COLORS];
         XImage keyFrame = xImages[0]; //default
-        int distance = 0;
+        int distance = Integer.MAX_VALUE;
 
         for (XImage image: xImages) { //sum all the histogram values to the sumHistogram
             int[] imageHistogram = image.getHistogram();
