@@ -34,7 +34,7 @@ public class HistogramComparison {
         return distance;
     }
 
-    private int getDistanceOfHistograms(int[] firstImageHistogram, int[] nextImageHistogram) {
+    public int getDistanceOfHistograms(int[] firstImageHistogram, int[] nextImageHistogram) {
         int distance = 0;
         for (int i = 0; i < NUM_COLORS; i++){
             distance+= Math.abs(firstImageHistogram[i] - nextImageHistogram[i]);
@@ -68,6 +68,18 @@ public class HistogramComparison {
             }
         }
 
+        return histogramMap;
+    }
+
+    public int[] getHistogram(int[][] rgbMatrix) {
+        int[] histogramMap = new int[NUM_COLORS];
+
+        //traverses the matrix and increments the color counter
+        for (int[] lArray: rgbMatrix) {
+            for (int luv: lArray) {
+                histogramMap[luv]++;
+            }
+        }
         return histogramMap;
     }
 }

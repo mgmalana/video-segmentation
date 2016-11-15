@@ -17,6 +17,7 @@ public class XImage {
     private int[][] RGBMatrix; //[x][y]
     private File file;
     private int distance;
+    private int[] histogram;
 
     public XImage(File file) throws IOException, ImageFormatException {
         this.file = file;
@@ -78,6 +79,14 @@ public class XImage {
 
     public void setDistance(int distance) {
         this.distance = distance;
+    }
+
+    public int[] getHistogram() {
+        return histogram;
+    }
+
+    public void setHistogram(int[] histogram) {
+        this.histogram = histogram;
     }
 
     @Override

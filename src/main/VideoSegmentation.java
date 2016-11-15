@@ -2,6 +2,7 @@ package main;
 
 import com.sun.image.codec.jpeg.ImageFormatException;
 import model.XImage;
+import videoSegmentationMethods.AverageHistogramTechnique;
 import videoSegmentationMethods.HistogramComparison;
 import videoSegmentationMethods.TwinComparison;
 
@@ -48,5 +49,10 @@ public class VideoSegmentation {
         System.out.println("Done segmenting");
 
         return tc.getSegmentedImages(images.toArray(new XImage[images.size()]), H_THRESHOLD, L_THRESHOLD, NUM_TOLERANCE);
+    }
+
+    public XImage[] getKeyFrames(XImage[][] segmentedVideo){
+        AverageHistogramTechnique ah = new AverageHistogramTechnique();
+        return ah.getKeyFrames(segmentedVideo);
     }
 }
