@@ -16,9 +16,10 @@ import java.util.ArrayList;
 public class VideoSegmentation {
 
     //TODO: set this pa. idk how to get this
-    private static int H_THRESHOLD = 6000;
-    private static int L_THRESHOLD = 2500;
-    private static int NUM_TOLERANCE = 1;
+    private int ALPHA = 5; //alpha for threshold computation (5 or 6)
+    private int H_THRESHOLD; //tb
+    private int L_THRESHOLD = 275; //ts (8 to 10)
+    private int NUM_TOLERANCE = 2; //tolerance (2 or 3)
 
     private TwinComparison tc;
 
@@ -46,11 +47,13 @@ public class VideoSegmentation {
         for(int i = 0; i < images.size() - 1; i++){
             int distance = hc.getDistance(images.get(i), images.get(i + 1));
             images.get(i).setDistance(distance);
-            System.out.println("Distance of " + images.get(i).getFile().getName() +
-                    " to " + images.get(i + 1).getFile().getName() + " is: " + distance);
+           // System.out.println("Distance of " + images.get(i).getFile().getName() +
+             //       " to " + images.get(i + 1).getFile().getName() + " is: " + distance);
+            System.out.println(distance);
         }
 
         System.out.println("Done segmenting");
+        computeThresholds(images);
         return tc.getSegmentedImages(images.toArray(new XImage[images.size()]), H_THRESHOLD, L_THRESHOLD, NUM_TOLERANCE);
     }
 
@@ -62,4 +65,30 @@ public class VideoSegmentation {
     public ArrayList<Integer> getTransitions(){
         return tc.getTransitions();
     }
+
+    private void computeThresholds(ArrayList<XImage> images){
+        double mean;
+        double stddev;
+        double sumForMean = 0;
+        double sumForStddev = 0;
+
+        //get mean
+        for(int i = 0; i<images.size()-1; i++){
+            sumForMean+=images.get(i).getDistance();
+        }
+        mean = sumForMean/images.size()-1;
+
+        //stddev of sample (population is n-1 bc we don't get the difference of the last one)
+        for(int i = 0; i<images.size()-1;i++){
+            sumForStddev+=Math.pow((images.get(i).getDistance() - mean), 2);
+        }
+        stddev=Math.sqrt(sumForStddev/images.size()-1);
+
+        H_THRESHOLD =  new Double(mean + (ALPHA * stddev)).intValue();
+
+        System.out.println("tb: " + H_THRESHOLD);
+
+    }
+
+
 }
