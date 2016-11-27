@@ -18,7 +18,7 @@ public class VideoSegmentation {
     //TODO: set this pa. idk how to get this
     private int ALPHA = 5; //alpha for threshold computation (5 or 6)
     private int H_THRESHOLD; //tb
-    private int L_THRESHOLD = 275; //ts (8 to 10)
+    private int L_THRESHOLD = 875; //ts (8 to 10)
     private int NUM_TOLERANCE = 2; //tolerance (2 or 3)
 
     private TwinComparison tc;
