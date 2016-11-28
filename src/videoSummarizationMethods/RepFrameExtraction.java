@@ -1,7 +1,6 @@
 package videoSummarizationMethods;
 
 import com.sun.image.codec.jpeg.ImageFormatException;
-import com.sun.tools.javac.code.Attribute;
 import model.Unit;
 import model.XImage;
 
@@ -21,9 +20,13 @@ public class RepFrameExtraction {
     private ArrayList<Unit> smallCluster;
     private ArrayList<Unit> largeCluster;
     private ArrayList<XImage> extractedFrames;
-    private int NUMFRAMES = 5; //N' can be changed
-    private int LENGTH = 3; //L = usually 3 for short videos I think
-    private double CRATIO = 0.5; //not sure what it should be but it's 0<r<1
+    private ArrayList<XImage> extraFrames;
+    private int NUMFRAMES = 12; //expected N'= # of original frames * % of video you want to keep;
+                            // how many representative frames we want
+                            //actual value can be <= NUMFRAMES
+                            //manually set in paper, researchers looked at video to count content changes which became basis for #
+    private int LENGTH = 3; //L = usually 3 for short videos I think; # of frames per unit
+    private double CRATIO = 0.3; //given through experiments by researchers
 
     public RepFrameExtraction(File selectedDirectory){
         loadVideo(selectedDirectory);
@@ -32,7 +35,7 @@ public class RepFrameExtraction {
     public ArrayList<XImage> getRepresentativeFrames(){
         //First Run
         findRepresentativeFrames(images);
-        while(!isDesiredNumberFrames()){
+        while(!isDesiredNumberFrames()){ //Loop
             findRepresentativeFrames(extractedFrames);
         }
         return extractedFrames;
@@ -64,20 +67,35 @@ public class RepFrameExtraction {
 
     private void partitionVideo(ArrayList<XImage> videoInput){
         units = new ArrayList<>();
+        extraFrames = new ArrayList<>();
         int index = 0;
-        while(index!=videoInput.size()-1){
+        int numUnits = 0;
+        while(index<videoInput.size()){
             Unit u = new Unit();
             for(int i = 0; i<LENGTH; i++){
-                u.addFrame(videoInput.get(index));
+                if(index < videoInput.size()){
+                    System.out.println("index: " + index + "    vInput: " + videoInput.get(index).getFile().getName() + "   vsize: " + videoInput.size());
+                    u.addFrame(videoInput.get(index));
+                }
                 index++;
             }
-            units.add(u);
+            if(u.getNumFrames()==LENGTH){
+                units.add(u);
+                numUnits++;
+                System.out.println(numUnits);
+            }else{
+                extraFrames.addAll(u.getAllFrames());
+            }
         }
     }
 
     private void computeChanges(){
         for(Unit u : units){
             u.computeUnitChange();
+        }
+        System.out.println("COMPUTE CHANGE");
+        for(Unit u : units){
+            System.out.println(u.getUnitChange());
         }
     }
 
@@ -94,12 +112,16 @@ public class RepFrameExtraction {
                 }
             }
         });
+        System.out.println("SORT");
+        for(Unit u : units){
+            System.out.println(u.getUnitChange());
+        }
     }
 
     private void makeSmallLargeClusters(){
-        int smallClusterSize = (int) (CRATIO * units.size());
+        int smallClusterSize = (int) Math.round((CRATIO * units.size())+0.5);
         //int largeClusterSize = units.size() - smallClusterSize;
-
+        System.out.println("SC SIZE: " + smallClusterSize);
         smallCluster = new ArrayList<>();
         largeCluster = new ArrayList<>();
 
@@ -115,16 +137,29 @@ public class RepFrameExtraction {
     private void extractFrames(){
         extractedFrames = new ArrayList<>();
         for(Unit u : smallCluster){
-            extractedFrames.add(u.getFirstFrame());
-            extractedFrames.add(u.getLastFrame());
+            if(!isExtracted(u.getFirstFrame())){
+                extractedFrames.add(u.getFirstFrame());
+            }
+            if(!isExtracted(u.getLastFrame())){
+                extractedFrames.add(u.getLastFrame());
+            }
         }
         for(Unit u : largeCluster){
             extractedFrames.addAll(u.getAllFrames());
         }
+        extractedFrames.addAll(extraFrames);
+    }
+
+    private boolean isExtracted(XImage image){
+        if(extractedFrames.contains(image)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     private boolean isDesiredNumberFrames(){
-        if(extractedFrames.size()>=NUMFRAMES){
+        if(extractedFrames.size()<=NUMFRAMES){
             return true;
         } else{
             return false;

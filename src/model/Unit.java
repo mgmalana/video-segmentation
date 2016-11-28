@@ -42,6 +42,8 @@ public class Unit {
         return images;
     }
 
-
+    public int getNumFrames(){
+        return images.size();
+    }
 
 }
