@@ -22,8 +22,8 @@ public class RSequenceGeneration {
         loadVideo(selectedDirectory);
     }
 
-    public ArrayList<XImage> generateSequence(int smoothingFactor){
-        RepFrameExtraction rfe = new RepFrameExtraction(images);
+    public ArrayList<XImage> generateSequence(int smoothingFactor, int numFrames){
+        RepFrameExtraction rfe = new RepFrameExtraction(images, numFrames);
         representativeFrames = rfe.getRepresentativeFrames();
         sortFileName();
 

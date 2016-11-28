@@ -21,14 +21,15 @@ public class RepFrameExtraction {
     private ArrayList<Unit> largeCluster;
     private ArrayList<XImage> extractedFrames;
     private ArrayList<XImage> extraFrames;
-    private int NUMFRAMES = 3; //expected N'= # of original frames * % of video you want to keep;
+    private int NUMFRAMES; //expected N'= # of original frames * % of video you want to keep;
                             // how many representative frames we want
                             //actual value can be <= NUMFRAMES
                             //manually set in paper, researchers looked at video to count content changes which became basis for #
     private int LENGTH = 3; //L = usually 3 for short videos I think; # of frames per unit
     private double CRATIO = 0.3; //given through experiments by researchers
 
-    public RepFrameExtraction(ArrayList<XImage> images){
+    public RepFrameExtraction(ArrayList<XImage> images, int NUMFRAMES){
+        this.NUMFRAMES = NUMFRAMES;
         this.images = images;
     }
 

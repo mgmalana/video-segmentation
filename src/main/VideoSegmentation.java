@@ -17,8 +17,8 @@ public class VideoSegmentation {
 
     //TODO: set this pa. idk how to get this
     private int ALPHA = 5; //alpha for threshold computation (5 or 6)
-    private int H_THRESHOLD; //tb
-    private int L_THRESHOLD = 875; //ts (8 to 10)
+    private int H_THRESHOLD; //tb is computed
+    private int L_THRESHOLD; //ts (manually set)
     private int NUM_TOLERANCE = 2; //tolerance (2 or 3)
 
     private TwinComparison tc;
@@ -28,7 +28,8 @@ public class VideoSegmentation {
     }
 
     //segment video
-    public XImage[][] videoSegment(File selectedDirectory){
+    public XImage[][] videoSegment(File selectedDirectory, int L_THRESHOLD){
+        this.L_THRESHOLD = L_THRESHOLD;
         //traverse files of the selectedDirectory. if image. save the image
         ArrayList<XImage> images =  new ArrayList<>();
         HistogramComparison hc = new HistogramComparison();

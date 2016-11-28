@@ -8,6 +8,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -28,6 +29,9 @@ public class Controller {
     public BarChart<Number, Number> barChart;
     public ImageView imageView;
     public ImageView keyImageView;
+    public TextField repFramesTextField;
+    public TextField sFactorTextField;
+    public TextField lThresholdTextField;
 
     private File selectedDirectory;
     private Image[] keyframes;
@@ -59,7 +63,7 @@ public class Controller {
 
     public void segment(ActionEvent actionEvent) {
         VideoSegmentation vs = new VideoSegmentation();
-        XImage[][] images = vs.videoSegment(selectedDirectory);
+        XImage[][] images = vs.videoSegment(selectedDirectory, Integer.parseInt(lThresholdTextField.getText()));
         XImage[] keyFrames = vs.getKeyFrames(images);
         ArrayList <Integer> transitions = vs.getTransitions();
 
@@ -77,7 +81,7 @@ public class Controller {
 
     public void summarize(ActionEvent actionEvent){
         RSequenceGeneration rsg = new RSequenceGeneration(selectedDirectory);
-        ArrayList<XImage> newVideo = rsg.generateSequence(10); //smoothing factor as param should be input
+        ArrayList<XImage> newVideo = rsg.generateSequence(Integer.parseInt(sFactorTextField.getText()), Integer.parseInt(repFramesTextField.getText())); //smoothing factor as param should be input
         for(XImage img : newVideo){
             System.out.println(img.getFile().getName());
         }
