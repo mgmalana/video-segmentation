@@ -63,7 +63,11 @@ public class Controller {
 
     public void segment(ActionEvent actionEvent) {
         VideoSegmentation vs = new VideoSegmentation();
-        XImage[][] images = vs.videoSegment(selectedDirectory, Integer.parseInt(lThresholdTextField.getText()));
+        int lThreshold = 580; //avg threshold of three videos (only used just in case no input was given; should be manually input)
+        if(!lThresholdTextField.getText().isEmpty()){
+            lThreshold = Integer.parseInt(lThresholdTextField.getText());
+        }
+        XImage[][] images = vs.videoSegment(selectedDirectory, lThreshold);
         XImage[] keyFrames = vs.getKeyFrames(images);
         ArrayList <Integer> transitions = vs.getTransitions();
 
@@ -81,7 +85,15 @@ public class Controller {
 
     public void summarize(ActionEvent actionEvent){
         RSequenceGeneration rsg = new RSequenceGeneration(selectedDirectory);
-        ArrayList<XImage> newVideo = rsg.generateSequence(Integer.parseInt(sFactorTextField.getText()), Integer.parseInt(repFramesTextField.getText())); //smoothing factor as param should be input
+        int smoothingFactor = 10;
+        int repFrames = 10; //default, but it really should be manually set
+        if(!repFramesTextField.getText().isEmpty()){
+            repFrames = Integer.parseInt(repFramesTextField.getText());
+        }
+        if(!sFactorTextField.getText().isEmpty()){
+            smoothingFactor = Integer.parseInt(sFactorTextField.getText());
+        }
+        ArrayList<XImage> newVideo = rsg.generateSequence(smoothingFactor, repFrames); //smoothing factor and repFrames as param should be input
         for(XImage img : newVideo){
             System.out.println(img.getFile().getName());
         }
