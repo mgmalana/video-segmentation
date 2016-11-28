@@ -17,7 +17,7 @@
             <Label layoutX="14.0" layoutY="330.0" text="Directory" />
             <Button layoutX="80.0" layoutY="325.0" mnemonicParsing="false" onAction="#openFileChooser" text="..." />
             <Label fx:id="directoryLabel" layoutX="126.0" layoutY="330.0" />
-            <SplitPane fx:id="segmentButtonWrap" layoutX="90.0" layoutY="360.0" prefHeight="10.0" prefWidth="75.0">
+            <SplitPane fx:id="segmentButtonWrap" layoutX="90.0" layoutY="360.0" prefHeight="10.0" prefWidth="65.0">
                <items>
                   <Button fx:id="segmentButton" alignment="BOTTOM_RIGHT" disable="true" mnemonicParsing="false" onAction="#segment" text="Segment" />
                </items>
@@ -25,7 +25,15 @@
                    <Tooltip text="Choose a directory of video to segment first" />
                </tooltip>
             </SplitPane>
-            <ImageView fx:id="imageView" fitHeight="158.0" fitWidth="174.0" pickOnBounds="true" preserveRatio="true" />
+             <SplitPane fx:id="summarizeButtonWrap" layoutX="10.0" layoutY="360.0" prefHeight="10.0" prefWidth="65.0">
+                 <items>
+                     <Button fx:id="summarizeButton" alignment="BOTTOM_RIGHT" disable="true" mnemonicParsing="false" onAction="#summarize" text="Summarize" />
+                 </items>
+                 <tooltip>
+                     <Tooltip text="Choose a directory of video to summarize first" />
+                 </tooltip>
+             </SplitPane>
+             <ImageView fx:id="imageView" fitHeight="158.0" fitWidth="174.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="keyImageView" fitHeight="158.0" fitWidth="174.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true" />
          </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">

@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.DirectoryChooser;
 import model.XImage;
+import videoSummarizationMethods.RepFrameExtraction;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 public class Controller {
     public Label directoryLabel;
     public SplitPane segmentButtonWrap;
+    public SplitPane summarizeButtonWrap;
+    public Button summarizeButton;
     public Button segmentButton;
     public BarChart<Number, Number> barChart;
     public ImageView imageView;
@@ -35,7 +38,8 @@ public class Controller {
             directoryLabel.setText(selectedDirectory.getName());
             segmentButtonWrap.setTooltip(null);
             segmentButton.setDisable(false);
-
+            summarizeButtonWrap.setTooltip(null);
+            summarizeButton.setDisable(false);
         }
     }
 
@@ -68,6 +72,16 @@ public class Controller {
 
         barChart.getData().clear();
         addImagesToBarChart(images);
+    }
+
+    public void summarize(ActionEvent actionEvent){
+        RepFrameExtraction rfe = new RepFrameExtraction(selectedDirectory);
+        ArrayList<XImage> repFrames = rfe.getRepresentativeFrames();
+        for(XImage x : repFrames){
+            System.out.println("RF: " + x.getFile().getName());
+        }
+        System.out.println("Num Rep Frames: " + repFrames.size());
+
     }
 
     private void addImagesToBarChart(XImage[][] images) {
