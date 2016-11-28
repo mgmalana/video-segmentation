@@ -49,7 +49,7 @@ public class VideoSegmentation {
             images.get(i).setDistance(distance);
            // System.out.println("Distance of " + images.get(i).getFile().getName() +
              //       " to " + images.get(i + 1).getFile().getName() + " is: " + distance);
-            System.out.println(distance);
+            //System.out.println(distance);
         }
 
         System.out.println("Done segmenting");
@@ -85,8 +85,6 @@ public class VideoSegmentation {
         stddev=Math.sqrt(sumForStddev/images.size()-1);
 
         H_THRESHOLD =  new Double(mean + (ALPHA * stddev)).intValue();
-
-        System.out.println("tb: " + H_THRESHOLD);
 
     }
 

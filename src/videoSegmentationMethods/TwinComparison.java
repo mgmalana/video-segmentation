@@ -59,11 +59,11 @@ public class TwinComparison {
 
         for(int i = 0; i<frameIndex.length; i++){
             if(frameIndex[i] == 1){
-                System.out.println("CUT: " + i);
+                //System.out.println("CUT: " + i);
                 cuts.add(i);
             }
             if(frameIndex[i] == 4){
-                System.out.println("TRANSITION: " + i);
+                //System.out.println("TRANSITION: " + i);
                 cuts.add(i);
                 transitions.add(cuts.size()-1); //remove this part if we want keyframes for all, including transitions
             }

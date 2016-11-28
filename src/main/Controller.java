@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.DirectoryChooser;
 import model.XImage;
+import videoSummarizationMethods.RSequenceGeneration;
 import videoSummarizationMethods.RepFrameExtraction;
 
 import java.io.File;
@@ -75,12 +76,11 @@ public class Controller {
     }
 
     public void summarize(ActionEvent actionEvent){
-        RepFrameExtraction rfe = new RepFrameExtraction(selectedDirectory);
-        ArrayList<XImage> repFrames = rfe.getRepresentativeFrames();
-        for(XImage x : repFrames){
-            System.out.println("RF: " + x.getFile().getName());
+        RSequenceGeneration rsg = new RSequenceGeneration(selectedDirectory);
+        ArrayList<XImage> newVideo = rsg.generateSequence(10); //smoothing factor as param should be input
+        for(XImage img : newVideo){
+            System.out.println(img.getFile().getName());
         }
-        System.out.println("Num Rep Frames: " + repFrames.size());
 
     }
 
@@ -106,7 +106,7 @@ public class Controller {
 
                     @Override
                     public void handle(MouseEvent event) {
-                        System.out.println("x: " + finalX + " series " + finalSeriesIndex);
+                        //System.out.println("x: " + finalX + " series " + finalSeriesIndex);
                         keyImageView.setImage(keyframes[finalSeriesIndex]);
                         imageView.setImage(image);
 

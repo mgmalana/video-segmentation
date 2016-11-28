@@ -21,15 +21,15 @@ public class RepFrameExtraction {
     private ArrayList<Unit> largeCluster;
     private ArrayList<XImage> extractedFrames;
     private ArrayList<XImage> extraFrames;
-    private int NUMFRAMES = 12; //expected N'= # of original frames * % of video you want to keep;
+    private int NUMFRAMES = 3; //expected N'= # of original frames * % of video you want to keep;
                             // how many representative frames we want
                             //actual value can be <= NUMFRAMES
                             //manually set in paper, researchers looked at video to count content changes which became basis for #
     private int LENGTH = 3; //L = usually 3 for short videos I think; # of frames per unit
     private double CRATIO = 0.3; //given through experiments by researchers
 
-    public RepFrameExtraction(File selectedDirectory){
-        loadVideo(selectedDirectory);
+    public RepFrameExtraction(ArrayList<XImage> images){
+        this.images = images;
     }
 
     public ArrayList<XImage> getRepresentativeFrames(){
@@ -49,40 +49,20 @@ public class RepFrameExtraction {
         extractFrames();
     }
 
-    public void loadVideo(File selectedDirectory){
-        //traverse files of the selectedDirectory. if image. save the image
-        images =  new ArrayList<>();
-
-        //adds all the images to the array.
-        for (File file : selectedDirectory.listFiles()) {
-            try {
-                images.add(new XImage(file));
-            }catch (ImageFormatException e) {
-                System.err.println(file + " is not a JPEG file");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private void partitionVideo(ArrayList<XImage> videoInput){
         units = new ArrayList<>();
         extraFrames = new ArrayList<>();
         int index = 0;
-        int numUnits = 0;
         while(index<videoInput.size()){
             Unit u = new Unit();
             for(int i = 0; i<LENGTH; i++){
                 if(index < videoInput.size()){
-                    System.out.println("index: " + index + "    vInput: " + videoInput.get(index).getFile().getName() + "   vsize: " + videoInput.size());
                     u.addFrame(videoInput.get(index));
                 }
                 index++;
             }
             if(u.getNumFrames()==LENGTH){
                 units.add(u);
-                numUnits++;
-                System.out.println(numUnits);
             }else{
                 extraFrames.addAll(u.getAllFrames());
             }
@@ -92,10 +72,6 @@ public class RepFrameExtraction {
     private void computeChanges(){
         for(Unit u : units){
             u.computeUnitChange();
-        }
-        System.out.println("COMPUTE CHANGE");
-        for(Unit u : units){
-            System.out.println(u.getUnitChange());
         }
     }
 
@@ -112,16 +88,11 @@ public class RepFrameExtraction {
                 }
             }
         });
-        System.out.println("SORT");
-        for(Unit u : units){
-            System.out.println(u.getUnitChange());
-        }
     }
 
     private void makeSmallLargeClusters(){
         int smallClusterSize = (int) Math.round((CRATIO * units.size())+0.5);
         //int largeClusterSize = units.size() - smallClusterSize;
-        System.out.println("SC SIZE: " + smallClusterSize);
         smallCluster = new ArrayList<>();
         largeCluster = new ArrayList<>();
 
