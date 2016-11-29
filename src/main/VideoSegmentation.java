@@ -15,10 +15,10 @@ import java.util.ArrayList;
  */
 public class VideoSegmentation {
 
-    //TODO: set this pa. idk how to get this
-    private static int H_THRESHOLD = 6000;
-    private static int L_THRESHOLD = 2500;
-    private static int NUM_TOLERANCE = 1;
+    private int alpha = 5; //alpha for threshold computation (5 or 6)
+    private int hThreshold; //tb is computed
+    private int lThreshold; //ts (manually set)
+    private int numTolerance = 2; //tolerance (2 or 3)
 
     private TwinComparison tc;
 
@@ -27,7 +27,8 @@ public class VideoSegmentation {
     }
 
     //segment video
-    public XImage[][] videoSegment(File selectedDirectory){
+    public XImage[][] videoSegment(File selectedDirectory, int lThreshold){
+        this.lThreshold = lThreshold;
         //traverse files of the selectedDirectory. if image. save the image
         ArrayList<XImage> images =  new ArrayList<>();
         HistogramComparison hc = new HistogramComparison();
@@ -46,12 +47,14 @@ public class VideoSegmentation {
         for(int i = 0; i < images.size() - 1; i++){
             int distance = hc.getDistance(images.get(i), images.get(i + 1));
             images.get(i).setDistance(distance);
-            System.out.println("Distance of " + images.get(i).getFile().getName() +
-                    " to " + images.get(i + 1).getFile().getName() + " is: " + distance);
+           // System.out.println("Distance of " + images.get(i).getFile().getName() +
+             //       " to " + images.get(i + 1).getFile().getName() + " is: " + distance);
+            //System.out.println(distance);
         }
 
         System.out.println("Done segmenting");
-        return tc.getSegmentedImages(images.toArray(new XImage[images.size()]), H_THRESHOLD, L_THRESHOLD, NUM_TOLERANCE);
+        computeThresholds(images);
+        return tc.getSegmentedImages(images.toArray(new XImage[images.size()]), hThreshold, lThreshold, numTolerance);
     }
 
     public XImage[] getKeyFrames(XImage[][] segmentedVideo){
@@ -62,4 +65,28 @@ public class VideoSegmentation {
     public ArrayList<Integer> getTransitions(){
         return tc.getTransitions();
     }
+
+    private void computeThresholds(ArrayList<XImage> images){
+        double mean;
+        double stddev;
+        double sumForMean = 0;
+        double sumForStddev = 0;
+
+        //get mean
+        for(int i = 0; i<images.size()-1; i++){
+            sumForMean+=images.get(i).getDistance();
+        }
+        mean = sumForMean/images.size()-1;
+
+        //stddev of sample (population is n-1 bc we don't get the difference of the last one)
+        for(int i = 0; i<images.size()-1;i++){
+            sumForStddev+=Math.pow((images.get(i).getDistance() - mean), 2);
+        }
+        stddev=Math.sqrt(sumForStddev/images.size()-1);
+
+        hThreshold =  new Double(mean + (alpha * stddev)).intValue();
+
+    }
+
+
 }

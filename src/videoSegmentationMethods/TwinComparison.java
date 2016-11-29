@@ -3,6 +3,8 @@ package videoSegmentationMethods;
 import model.XImage;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 /**
@@ -21,47 +23,66 @@ public class TwinComparison {
         boolean isPossibleTransition = false;
         int cumulative = 0;
         int toleranceCount = 0;
-        for (int i = 0; i < images.length; i++) {
-            if(isPossibleTransition){
-                if (images[i].getDistance() > lThreshold){
-                    cumulative+= images[i].getDistance();
-                } else {
-                    if (cumulative > hThreshold){
-                        toleranceCount = 0;
+        int transitionStart = -1;
+        int[] frameIndex = new int[images.length]; //1 if abrupt, 4 if transition
+        //mark abrupt camera breaks first
+        for(int i = 1; i < images.length; i++) {
+            System.out.println(i + "    " + images[i].getDistance());
+            if (images[i].getDistance() > lThreshold) {
+                if (images[i].getDistance() > hThreshold) { //if abrupt break
+                    frameIndex[i] = 1;
+                    if (transitionStart != -1 && cumulative > hThreshold) {    //if in middle of possible transition and abrupt break
+                        frameIndex[transitionStart] = 4;
+                        frameIndex[i+1] = 1;
+                        System.out.println("is trans a: " + transitionStart);
                         cumulative = 0;
-                        isPossibleTransition = false;
-                        transitions.add(cuts.size() - 1); //adds the index of transition in cuts
-                        cuts.add(i); //adds the next scene
-                    } else if(toleranceCount >= tolerance){
+                        transitionStart = -1;
                         toleranceCount = 0;
-                        cumulative = 0;
-                        isPossibleTransition = false;
-                        cuts.removeLast(); //remove the last int added
-                    } else {
-                        toleranceCount++;
-                        //TODO: ask kate if kelangan iadd sya sa cumulative
-//                        cumulative+= images[i].getDistance();
                     }
+                } else if (images[i].getDistance() <= hThreshold) { //if possible transition
+                        if (transitionStart == -1) {
+                            transitionStart = i;
+                        }
+                        cumulative += images[i].getDistance();
                 }
-            } else {
-                if (images[i].getDistance() > hThreshold){
-                    cuts.add(i);
-                } else if (images[i].getDistance() > lThreshold){
-                    cuts.add(i);
-                    isPossibleTransition = true;
-                    cumulative = images[i].getDistance();
+            } else if (transitionStart != -1 && images[i].getDistance() <= lThreshold) { //if it cuts into transition
+                if(toleranceCount < tolerance){
+                    cumulative += images[i].getDistance();
+                    toleranceCount++;
+                } else if (cumulative > hThreshold && toleranceCount>=tolerance) {    //if is a transition
+                    frameIndex[transitionStart] = 4;
+                    frameIndex[i+1] = 1;
+                    System.out.println("is trans b: " + transitionStart);
+                    cumulative = 0;
+                    transitionStart = -1;
+                    toleranceCount = 0;
+                } else if((cumulative <= hThreshold)
+                            && (toleranceCount >= tolerance)){                    //if not a transition
+                    cumulative = 0;
+                    transitionStart = -1;
+                    toleranceCount = 0;
+
                 }
             }
-
-
         }
-        //TODO: check check check this part
+
+        for(int i = 0; i<frameIndex.length; i++){
+            if(frameIndex[i] == 1){
+                System.out.println("CUT: " + i);
+                cuts.add(i);
+            }
+            if(frameIndex[i] == 4){
+                System.out.println("TRANSITION: " + i);
+                cuts.add(i);
+                transitions.add(cuts.size()); //remove this part if we want keyframes for all, including transitions
+            }
+        }
 
         segmentedImages = new XImage[cuts.size() + 1][];
 
         int prevCut = 0;
         for (int i = 0; i < segmentedImages.length - 1; i++) {
-            int nextCut = cuts.removeFirst();
+            int nextCut = cuts.removeFirst() + 1;
             segmentedImages[i] = new XImage[nextCut - prevCut];
 
             System.arraycopy(images, prevCut, segmentedImages[i], 0, segmentedImages[i].length);
