@@ -69,6 +69,8 @@ public class Controller {
         int lThreshold = 580; //avg threshold of three videos (only used just in case no input was given; should be manually input)
         if(!lThresholdTextField.getText().isEmpty()){
             lThreshold = Integer.parseInt(lThresholdTextField.getText());
+        } else {
+            lThresholdTextField.setText(lThreshold+"");
         }
         XImage[][] images = vs.videoSegment(selectedDirectory, lThreshold);
         XImage[] keyFrames = vs.getKeyFrames(images);
@@ -92,9 +94,13 @@ public class Controller {
         int repFrames = 10; //default, but it really should be manually set
         if(!repFramesTextField.getText().isEmpty()){
             repFrames = Integer.parseInt(repFramesTextField.getText());
+        } else {
+            repFramesTextField.setText(repFrames+"");
         }
         if(!sFactorTextField.getText().isEmpty()){
             smoothingFactor = Integer.parseInt(sFactorTextField.getText());
+        } else {
+            sFactorTextField.setText(smoothingFactor+"");
         }
         XImage[] newVideo = rsg.generateSequence(smoothingFactor, repFrames); //smoothing factor and repFrames as param should be input
 
@@ -154,7 +160,7 @@ public class Controller {
                     }
                 });
             }
-            indexArray += imageArray.length;//TODO: check if tama
+            indexArray += imageArray.length;
             seriesIndex++;
         }
     }
