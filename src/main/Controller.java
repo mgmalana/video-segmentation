@@ -147,7 +147,7 @@ public class Controller {
 
                     @Override
                     public void handle(MouseEvent event) {
-                        //System.out.println("x: " + finalX + " series " + finalSeriesIndex);
+                        System.out.println("x: " + finalX + " series " + finalSeriesIndex);
                         keyImageView.setImage(keyframes[finalSeriesIndex]);
                         imageView.setImage(image);
 

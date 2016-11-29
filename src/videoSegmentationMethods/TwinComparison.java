@@ -46,12 +46,17 @@ public class TwinComparison {
                 if(toleranceCount < tolerance){
                     cumulative += images[i].getDistance();
                     toleranceCount++;
-                }
-                else if (transitionStart != -1 && cumulative > hThreshold) {    //if is a transition
+                } else if (transitionStart != -1 && cumulative > hThreshold) {    //if is a transition
                     frameIndex[transitionStart] = 4;
                     cumulative = 0;
                     transitionStart = -1;
                     toleranceCount = 0;
+                } else if((transitionStart != -1 && cumulative <= hThreshold)
+                            || toleranceCount >= tolerance){                    //if not a transition
+                    cumulative = 0;
+                    transitionStart = -1;
+                    toleranceCount = 0;
+
                 }
             }
 
@@ -59,11 +64,11 @@ public class TwinComparison {
 
         for(int i = 0; i<frameIndex.length; i++){
             if(frameIndex[i] == 1){
-                //System.out.println("CUT: " + i);
+                System.out.println("CUT: " + i);
                 cuts.add(i);
             }
             if(frameIndex[i] == 4){
-                //System.out.println("TRANSITION: " + i);
+                System.out.println("TRANSITION: " + i);
                 cuts.add(i);
                 transitions.add(cuts.size()-1); //remove this part if we want keyframes for all, including transitions
             }
