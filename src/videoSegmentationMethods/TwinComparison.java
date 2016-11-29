@@ -69,8 +69,6 @@ public class TwinComparison {
             }
         }
 
-        //TODO: check check check this part
-
         segmentedImages = new XImage[cuts.size() + 1][];
 
         int prevCut = 0;

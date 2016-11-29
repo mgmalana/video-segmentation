@@ -15,11 +15,10 @@ import java.util.ArrayList;
  */
 public class VideoSegmentation {
 
-    //TODO: set this pa. idk how to get this
-    private int ALPHA = 5; //alpha for threshold computation (5 or 6)
-    private int H_THRESHOLD; //tb is computed
-    private int L_THRESHOLD; //ts (manually set)
-    private int NUM_TOLERANCE = 2; //tolerance (2 or 3)
+    private int alpha = 5; //alpha for threshold computation (5 or 6)
+    private int hThreshold; //tb is computed
+    private int lThreshold; //ts (manually set)
+    private int numTolerance = 2; //tolerance (2 or 3)
 
     private TwinComparison tc;
 
@@ -28,8 +27,8 @@ public class VideoSegmentation {
     }
 
     //segment video
-    public XImage[][] videoSegment(File selectedDirectory, int L_THRESHOLD){
-        this.L_THRESHOLD = L_THRESHOLD;
+    public XImage[][] videoSegment(File selectedDirectory, int lThreshold){
+        this.lThreshold = lThreshold;
         //traverse files of the selectedDirectory. if image. save the image
         ArrayList<XImage> images =  new ArrayList<>();
         HistogramComparison hc = new HistogramComparison();
@@ -55,7 +54,7 @@ public class VideoSegmentation {
 
         System.out.println("Done segmenting");
         computeThresholds(images);
-        return tc.getSegmentedImages(images.toArray(new XImage[images.size()]), H_THRESHOLD, L_THRESHOLD, NUM_TOLERANCE);
+        return tc.getSegmentedImages(images.toArray(new XImage[images.size()]), hThreshold, lThreshold, numTolerance);
     }
 
     public XImage[] getKeyFrames(XImage[][] segmentedVideo){
@@ -85,7 +84,7 @@ public class VideoSegmentation {
         }
         stddev=Math.sqrt(sumForStddev/images.size()-1);
 
-        H_THRESHOLD =  new Double(mean + (ALPHA * stddev)).intValue();
+        hThreshold =  new Double(mean + (alpha * stddev)).intValue();
 
     }
 
