@@ -17,7 +17,11 @@ import model.XImage;
 import videoSummarizationMethods.RSequenceGeneration;
 import videoSummarizationMethods.RepFrameExtraction;
 
+import java.awt.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Controller {
@@ -94,10 +98,32 @@ public class Controller {
             smoothingFactor = Integer.parseInt(sFactorTextField.getText());
         }
         ArrayList<XImage> newVideo = rsg.generateSequence(smoothingFactor, repFrames); //smoothing factor and repFrames as param should be input
-        for(XImage img : newVideo){
-            System.out.println(img.getFile().getName());
-        }
 
+        generateHTML("Summary of the video", newVideo);
+    }
+
+    private void generateHTML(String title, ArrayList<XImage> images){
+        try{
+            File file = new File(selectedDirectory.getName()+".html");
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            bw.write("<html>");
+            bw.write("<body>");
+            bw.write("<h2>Query: "+selectedDirectory.getName()+"<h2><br>");
+            bw.write("<h2>" +title+ "</h2>");
+            for (XImage image: images){
+                bw.write("<img src=\"" + image.getFile().getPath() + "\"</img>" +
+                        image.getFile().getName() +
+                        "<hr>");
+                //System.out.print(f.getName() +", ");
+            }
+            bw.write("</body>");
+            bw.write("</html>");
+            bw.close();
+
+            Desktop.getDesktop().browse(file.toURI());
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     private void addImagesToBarChart(XImage[][] images) {
