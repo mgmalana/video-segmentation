@@ -82,7 +82,7 @@ public class TwinComparison {
 
         int prevCut = 0;
         for (int i = 0; i < segmentedImages.length - 1; i++) {
-            int nextCut = cuts.removeFirst();
+            int nextCut = cuts.removeFirst() + 1;
             segmentedImages[i] = new XImage[nextCut - prevCut];
 
             System.arraycopy(images, prevCut, segmentedImages[i], 0, segmentedImages[i].length);
