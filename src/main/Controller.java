@@ -15,7 +15,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.DirectoryChooser;
 import model.XImage;
 import videoSummarizationMethods.RSequenceGeneration;
-import videoSummarizationMethods.RepFrameExtraction;
 
 import java.awt.*;
 import java.io.BufferedWriter;
@@ -97,14 +96,14 @@ public class Controller {
         if(!sFactorTextField.getText().isEmpty()){
             smoothingFactor = Integer.parseInt(sFactorTextField.getText());
         }
-        ArrayList<XImage> newVideo = rsg.generateSequence(smoothingFactor, repFrames); //smoothing factor and repFrames as param should be input
+        XImage[] newVideo = rsg.generateSequence(smoothingFactor, repFrames); //smoothing factor and repFrames as param should be input
 
         generateHTML("Summary of the video", newVideo);
     }
 
-    private void generateHTML(String title, ArrayList<XImage> images){
+    private void generateHTML(String title, XImage[] images){
         try{
-            File file = new File(selectedDirectory.getName()+".html");
+            File file = new File(selectedDirectory.getName()+"_"+title.split(" ")[0]+".html");
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("<html>");
             bw.write("<body>");

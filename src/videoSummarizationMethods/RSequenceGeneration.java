@@ -1,14 +1,11 @@
 package videoSummarizationMethods;
 
 import com.sun.image.codec.jpeg.ImageFormatException;
-import model.Unit;
 import model.XImage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 /**
  * Created by Kate on 11/29/2016.
@@ -22,19 +19,22 @@ public class RSequenceGeneration {
         loadVideo(selectedDirectory);
     }
 
-    public ArrayList<XImage> generateSequence(int smoothingFactor, int numFrames){
+    public XImage[] generateSequence(int smoothingFactor, int numFrames){
         RepFrameExtraction rfe = new RepFrameExtraction(images, numFrames);
         representativeFrames = rfe.getRepresentativeFrames();
         sortFileName();
 
-        ArrayList<XImage> newVideo = new ArrayList<>();
+        Set<XImage> newVideo = new LinkedHashSet<>();
         for(XImage rFrame : representativeFrames){
             int index = images.indexOf(rFrame);
             for(int i = 0; i<smoothingFactor; i++){
-                newVideo.add(images.get(index+i));
+                if(index+i <images.size()){
+                    newVideo.add(images.get(index+i));
+                }
             }
         }
-        return newVideo;
+
+        return newVideo.toArray(new XImage[newVideo.size()]);
     }
 
     private void loadVideo(File selectedDirectory){
