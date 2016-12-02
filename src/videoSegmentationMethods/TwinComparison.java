@@ -27,14 +27,12 @@ public class TwinComparison {
         int[] frameIndex = new int[images.length]; //1 if abrupt, 4 if transition
         //mark abrupt camera breaks first
         for(int i = 1; i < images.length; i++) {
-            System.out.println(i + "    " + images[i].getDistance());
             if (images[i].getDistance() > lThreshold) {
                 if (images[i].getDistance() > hThreshold) { //if abrupt break
                     frameIndex[i] = 1;
                     if (transitionStart != -1 && cumulative > hThreshold) {    //if in middle of possible transition and abrupt break
                         frameIndex[transitionStart] = 4;
                         frameIndex[i+1] = 1;
-                        System.out.println("is trans a: " + transitionStart);
                         cumulative = 0;
                         transitionStart = -1;
                         toleranceCount = 0;
@@ -52,7 +50,6 @@ public class TwinComparison {
                 } else if (cumulative > hThreshold && toleranceCount>=tolerance) {    //if is a transition
                     frameIndex[transitionStart] = 4;
                     frameIndex[i+1] = 1;
-                    System.out.println("is trans b: " + transitionStart);
                     cumulative = 0;
                     transitionStart = -1;
                     toleranceCount = 0;
@@ -68,11 +65,11 @@ public class TwinComparison {
 
         for(int i = 0; i<frameIndex.length; i++){
             if(frameIndex[i] == 1){
-                System.out.println("CUT: " + i);
+                //System.out.println("CUT: " + i);
                 cuts.add(i);
             }
             if(frameIndex[i] == 4){
-                System.out.println("TRANSITION: " + i);
+                //System.out.println("TRANSITION: " + i);
                 cuts.add(i);
                 transitions.add(cuts.size()); //remove this part if we want keyframes for all, including transitions
             }
