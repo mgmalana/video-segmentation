@@ -1,9 +1,5 @@
 <component name="ArtifactManager">
-<<<<<<< HEAD
-  <artifact type="jar" name="JavaFxApplication:jar">
-=======
   <artifact type="jar" build-on-make="true" name="JavaFxApplication:jar">
->>>>>>> test-summarization
     <output-path>$PROJECT_DIR$/out/artifacts/JavaFxApplication_jar</output-path>
     <root id="archive" name="JavaFxApplication.jar">
       <element id="module-output" name="JavaFxApplication" />
