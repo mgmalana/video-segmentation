@@ -66,7 +66,7 @@ public class Controller {
 
     public void segment(ActionEvent actionEvent) {
         VideoSegmentation vs = new VideoSegmentation();
-        int lThreshold = 580; //avg threshold of three videos (only used just in case no input was given; should be manually input)
+        int lThreshold = 2250; //avg threshold of three videos (only used just in case no input was given; should be manually input)
         if(!lThresholdTextField.getText().isEmpty()){
             lThreshold = Integer.parseInt(lThresholdTextField.getText());
         } else {
