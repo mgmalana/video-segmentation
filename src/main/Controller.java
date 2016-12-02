@@ -53,7 +53,7 @@ public class Controller {
 
     public File initFileChooser(){
         DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setInitialDirectory(new File("videos/"));
+        //chooser.setInitialDirectory(new File("videos/"));
 
         File file = chooser.showDialog(null);
         if (file != null) {
